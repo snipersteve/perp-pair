@@ -1,0 +1,20 @@
+[Unit]
+Description=Perp Pair Tokyo shared-account supervised probe / observer
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/deploy/perp-pair
+EnvironmentFile=/root/deploy/perp-pair/.env
+ExecStart=/root/.nvm/versions/node/v22.22.3/bin/node /root/perp-pair-code/dist/main.js
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=40
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/root/deploy/perp-pair
+[Install]
+WantedBy=multi-user.target

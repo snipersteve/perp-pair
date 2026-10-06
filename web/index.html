@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PERP PAIR · 双合约</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<header><div class="brand"><span class="mark">⇄</span><div>PERP PAIR<small>ASTER × BINANCE · 独立双合约工作台</small></div></div><div id="topStatus"></div><button id="pause" class="danger">暂停新单</button><button id="resume" class="primary">恢复交易</button></header>
+<div id="banner" class="banner"></div>
+<main>
+<section id="metrics" class="metrics"></section>
+<div class="layout"><aside><div class="section-head"><h2>交易对</h2><button id="add">＋ 添加</button></div><div id="pairList"></div><div class="aside-note">A = Aster 永续<br>B = Binance 永续<br>不涉及现货、链上或钱包</div></aside>
+<section class="workspace"><div class="section-head"><div><h1 id="pairTitle">选择交易对</h1><div id="capability" class="muted"></div></div><div id="pairMode"></div></div>
+<div id="quotes" class="quotes"></div>
+<div class="panel"><div class="section-head"><h2>交易参数</h2><span class="muted">净价差已扣两腿预估手续费和执行缓冲</span></div>
+<form id="pairForm">
+<label>内部标识<input name="id" required pattern="[a-zA-Z0-9_-]{1,32}" maxlength="32"></label>
+<label>Aster 合约<input name="aSymbol" list="symbols" required></label><label>Binance 合约<input name="bSymbol" list="symbols" required></label>
+<label>状态<select name="mode"><option value="stop">停止</option><option value="run">正常交易</option><option value="reduce">只减仓</option></select></label>
+<label>方向<select name="direction"><option value="both">双向机会</option><option value="longA">仅多 A / 空 B</option><option value="shortA">仅空 A / 多 B</option></select></label>
+<label>单笔上限 U<input name="orderUsd" type="number" min="5" step="1" required></label>
+<label>单币仓位上限 U<input name="capUsd" type="number" min="5" step="1" required></label>
+<label>开仓净价差 %<input name="openPct" type="number" min="0" step="0.01" required></label>
+<label>平仓净价差 %<input name="closePct" type="number" step="0.01" required></label>
+<div class="form-footer"><span id="formStatus" class="muted"></span><button class="primary" type="submit">保存参数</button></div>
+</form><datalist id="symbols"></datalist>
+</div>
+<div class="panel"><div class="section-head"><h2>双边深度 · 前 5 档</h2><span id="bookAge" class="muted"></span></div><div id="depth" class="depth"></div></div>
+</section></div>
+<section class="panel"><div class="section-head"><h2>执行记录</h2><span class="muted">首腿确认后直接对冲，不等待手续费查询</span></div><div class="scroll"><table><thead><tr><th>时间</th><th>交易对</th><th>动作</th><th>数量 A / B</th><th>结果</th><th>首腿确认</th><th>币安响应</th></tr></thead><tbody id="trades"></tbody></table></div></section>
+<div class="bottom"><section class="panel"><div class="section-head"><h2>运行事件</h2><button id="recover">恢复查询 / 对账</button><button id="ack">确认解除熔断</button></div><div id="events"></div></section>
+<section class="panel"><h2>执行与风控说明</h2><p>Aster 首腿为部署配置的 FOK（或显式 IOC）。确认实际成交后，币安按实际数量下市价单。首腿未成交不对冲。</p><p>严格 FOK：交易所未声明支持时，需要先完成独立核验；没有核验就禁止下单，不会自动改为 IOC。</p><p>订单超时先查单，不重发。币安确定未完全成交时，尝试带价格和损失上限的 Aster 撤回；结果未知或撤回失败，停止并保留告警。</p><p>重启默认暂停。默认独立单向持仓账户；显式共享模式仅允许专属合约的人工单次探针，不支持后台自动交易；暂停不平仓，停止状态也不自动平仓。自动减仓仍需达到平仓门槛。</p><p>收益 = 双边已实现 + 浮动盈亏 + 已同步资金费 − 预估手续费。不是仅把入场价差当利润；账户资金费是独立账户口径。成交费用暂按部署费率估算，不冒充交易所审计净利。</p><div id="riskInfo" class="muted"></div></section></div>
+</main><div id="toast"></div><script type="module" src="/app.js"></script></body></html>

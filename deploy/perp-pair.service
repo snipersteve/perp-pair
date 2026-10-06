@@ -1,0 +1,28 @@
+[Unit]
+Description=Perp Pair independent Aster Binance hedge engine
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=perp-pair
+Group=perp-pair
+WorkingDirectory=/opt/perp-pair/current
+EnvironmentFile=/etc/perp-pair.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node /opt/perp-pair/current/dist/main.js
+Restart=on-failure
+RestartSec=10
+KillSignal=SIGTERM
+TimeoutStopSec=40
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/perp-pair
+# key PEM, if used, must reside under /etc/perp-pair/ (perp-pair readable)
+LimitNOFILE=8192
+
+[Install]
+WantedBy=multi-user.target
